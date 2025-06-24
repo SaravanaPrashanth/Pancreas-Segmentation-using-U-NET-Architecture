@@ -420,7 +420,7 @@
                 </div>
                 
                 <p style="text-align: center; margin-top: 2rem;">
-                    <a href="https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/blob/master/pancreassegmentation.py" class="cta-button" onclick="viewFullCode()">View Full Code on GitHub</a>
+                    <a href="#" class="cta-button" onclick="viewFullCode()">View Full Code on GitHub</a>
                 </p>
             </section>
 
@@ -453,27 +453,27 @@
             <section id="results" class="section fade-in">
                 <h2>Results & Visualizations</h2>
                 <div class="image-gallery">
-                    <div class="image-card" onclick="openImage('https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/blob/master/init_visualization.png')">
+                    <div class="image-card" onclick="openImage('init_visualization.png')">
                         <div class="image-placeholder">Initial Visualization</div>
                         <p>Data Preprocessing</p>
                     </div>
-                    <div class="image-card" onclick="openImage('https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/blob/master/final-output-visualization-1.png')">
+                    <div class="image-card" onclick="openImage('final-output-visualization-1.png')">
                         <div class="image-placeholder">Output Visualization 1</div>
                         <p>Segmentation Results</p>
                     </div>
-                    <div class="image-card" onclick="openImage('https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/blob/master/final-output-visualization-2.png')">
+                    <div class="image-card" onclick="openImage('final-output-visualization-2.png')">
                         <div class="image-placeholder">Output Visualization 2</div>
                         <p>Enhanced Results</p>
                     </div>
-                    <div class="image-card" onclick="openImage('https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/blob/master/final-output-visualization-RANDOM.png')">
+                    <div class="image-card" onclick="openImage('final-output-visualization-RANDOM.png')">
                         <div class="image-placeholder">Random Samples</div>
                         <p>Random Results</p>
                     </div>
-                    <div class="image-card" onclick="openImage('https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/blob/master/plotting_models-loss_and_validation-loss.png')">
+                    <div class="image-card" onclick="openImage('plotting_models-loss_and_validation-loss.png')">
                         <div class="image-placeholder">Loss & Validation</div>
                         <p>Training Metrics</p>
                     </div>
-                    <div class="image-card" onclick="openCode('https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture')">
+                    <div class="image-card" onclick="openCode('pancreasSegmentation.ipynb')">
                         <div class="image-placeholder">📓</div>
                         <p>Jupyter Notebook</p>
                     </div>
@@ -521,12 +521,12 @@ model.compile(optimizer='adam', loss='binary_crossentropy')</div>
             <section id="contact" class="section fade-in">
                 <h2>Documentation & Resources</h2>
                 <div class="features-grid">
-                    <div class="feature-card" onclick="openResource('https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/tree/master/doc-final-year-project')">
+                    <div class="feature-card" onclick="openResource('doc-final-year-project/PANCREAS SEGMENTATION IN ABDOMINAL CT SCAN USING U-NET.pptx')">
                         <div class="feature-icon">📊</div>
                         <h3>Presentation</h3>
                         <p>PowerPoint presentation with key findings</p>
                     </div>
-                    <div class="feature-card" onclick="openResource('https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/blob/master/model-tgs-pancreas.h5')">
+                    <div class="feature-card" onclick="openResource('model-tgs-pancreas.h5')">
                         <div class="feature-icon">💾</div>
                         <h3>Trained Model</h3>
                         <p>Pre-trained model ready for deployment</p>
@@ -587,32 +587,32 @@ model.compile(optimizer='adam', loss='binary_crossentropy')</div>
 
         // Image and code opening functions
         function openImage(filename) {
-            // Replace 'yourusername' and 'your-repo-name' with your actual GitHub username and repository name
-            const baseURL = 'https://raw.githubusercontent.com/yourusername/Pancreas-Segmentation-using-U-NET-Architecture/main/';
+            
+            const baseURL = 'https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture';
             window.open(baseURL + filename, '_blank');
         }
 
         function openCode(filename) {
-            // Replace 'yourusername' and 'your-repo-name' with your actual GitHub username and repository name
-            const baseURL = 'https://github.com/yourusername/Pancreas-Segmentation-using-U-NET-Architecture/blob/main/';
+            
+            const baseURL = 'https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/blob/main/';
             window.open(baseURL + filename, '_blank');
         }
 
         function openResource(filepath) {
-            // Replace 'yourusername' and 'your-repo-name' with your actual GitHub username and repository name
-            const baseURL = 'https://github.com/yourusername/Pancreas-Segmentation-using-U-NET-Architecture/blob/main/';
+            
+            const baseURL = 'https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/blob/main/';
             window.open(baseURL + encodeURIComponent(filepath), '_blank');
         }
 
         function viewFullCode() {
             // Opens the main Python script - you can change this to .ipynb if preferred
-            const baseURL = 'https://github.com/yourusername/Pancreas-Segmentation-using-U-NET-Architecture/blob/main/';
+            const baseURL = 'https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture/blob/master/';
             window.open(baseURL + 'pancreasSegmentation.py', '_blank');
         }
 
         // Social links
         function showGitHub() {
-            alert('GitHub repository: https://github.com/yourusername/Pancreas-Segmentation-using-U-NET-Architecture');
+            alert('GitHub repository: https://github.com/SaravanaPrashanth/Pancreas-Segmentation-using-U-NET-Architecture');
         }
 
         function showLinkedIn() {
@@ -620,7 +620,7 @@ model.compile(optimizer='adam', loss='binary_crossentropy')</div>
         }
 
         function showEmail() {
-            alert('Contact: your.email@example.com');
+            alert('Contact me on Email!');
         }
 
         // Close modal when clicking outside (remove if modal is not used)
