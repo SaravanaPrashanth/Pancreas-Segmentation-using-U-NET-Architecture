@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pancreas Segmentation using U-NET</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        main {
+            margin-top: 80px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .cta-button:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .section {
+            background: white;
+            margin: 2rem 0;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .image-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .image-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-placeholder {
+            height: 200px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .image-card p {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .tech-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tech-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .code-section {
+            background: #1a1a1a;
+            color: #e5e5e5;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+            margin-right: 1rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #ff5f57; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #28ca42; }
+
+        .code-content {
+            font-family: 'Monaco', 'Menlo', monospace;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .interactive-demo {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            color: white;
+            margin: 2rem 0;
+        }
+
+        .demo-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-button:hover {
+            background: white;
+            color: #f5576c;
+            transform: scale(1.05);
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: #667eea;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section {
+                padding: 2rem;
+            }
+        }
+
+        /* Animation classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .close-modal {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">🥞 PancreasSeg</div>
+            <ul class="nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#results">Results</a></li>
+                <li><a href="#code">Code</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Pancreas Segmentation</h1>
+                <p>Advanced Medical Image Segmentation using U-NET Architecture</p>
+                <a href="#overview" class="cta-button">Explore Project</a>
+            </div>
+        </section>
+
+        <div class="container">
+            <section id="overview" class="section fade-in">
+                <h2>Project Overview</h2>
+                <p>This project implements a sophisticated U-NET architecture for automated pancreas segmentation in abdominal CT scans. The system leverages deep learning techniques to achieve precise medical image analysis, contributing to improved diagnostic accuracy and efficiency in healthcare.</p>
+                
+                <div class="tech-stack">
+                    <span class="tech-badge">Python</span>
+                    <span class="tech-badge">TensorFlow</span>
+                    <span class="tech-badge">Keras</span>
+                    <span class="tech-badge">U-NET</span>
+                    <span class="tech-badge">OpenCV</span>
+                    <span class="tech-badge">NumPy</span>
+                    <span class="tech-badge">Medical Imaging</span>
+                </div>
+                
+                <p style="text-align: center; margin-top: 2rem;">
+                    <a href="#" class="cta-button" onclick="viewFullCode()">View Full Code on GitHub</a>
+                </p>
+            </section>
+
+            <section id="features" class="section fade-in">
+                <h2>Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧠</div>
+                        <h3>Deep Learning Architecture</h3>
+                        <p>Implements U-NET with encoder-decoder structure for precise segmentation</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Fixed-Point Quantization</h3>
+                        <p>Optimized model performance with quantization techniques</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔬</div>
+                        <h3>Medical Grade Accuracy</h3>
+                        <p>High precision segmentation suitable for clinical applications</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Comprehensive Analysis</h3>
+                        <p>Detailed performance metrics and visualization tools</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="results" class="section fade-in">
+                <h2>Results & Visualizations</h2>
+                <div class="image-gallery">
+                    <div class="image-card" onclick="openImage('init_visualization.png')">
+                        <div class="image-placeholder">Initial Visualization</div>
+                        <p>Data Preprocessing</p>
+                    </div>
+                    <div class="image-card" onclick="openImage('final-output-visualization-1.png')">
+                        <div class="image-placeholder">Output Visualization 1</div>
+                        <p>Segmentation Results</p>
+                    </div>
+                    <div class="image-card" onclick="openImage('final-output-visualization-2.png')">
+                        <div class="image-placeholder">Output Visualization 2</div>
+                        <p>Enhanced Results</p>
+                    </div>
+                    <div class="image-card" onclick="openImage('final-output-visualization-RANDOM.png')">
+                        <div class="image-placeholder">Random Samples</div>
+                        <p>Random Results</p>
+                    </div>
+                    <div class="image-card" onclick="openImage('plotting_models-loss_and_validation-loss.png')">
+                        <div class="image-placeholder">Loss & Validation</div>
+                        <p>Training Metrics</p>
+                    </div>
+                    <div class="image-card" onclick="openCode('pancreasSegmentation.ipynb')">
+                        <div class="image-placeholder">📓</div>
+                        <p>Jupyter Notebook</p>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <section id="code" class="section fade-in">
+                <h2>Code Implementation</h2>
+                <div class="code-section">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                        <span>pancreasSegmentation.py</span>
+                    </div>
+                    <div class="code-content"># U-NET Architecture for Pancreas Segmentation
+import tensorflow as tf
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D
+
+def unet_model(input_size=(256, 256, 1)):
+    inputs = Input(input_size)
+    
+    # Encoder
+    conv1 = Conv2D(64, 3, activation='relu', padding='same')(inputs)
+    pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
+    
+    # Decoder
+    up1 = Conv2D(64, 2, activation='relu', padding='same')(pool1)
+    
+    model = Model(inputs=inputs, outputs=up1)
+    return model
+
+# Load and preprocess data
+model = unet_model()
+model.compile(optimizer='adam', loss='binary_crossentropy')</div>
+                </div>
+              <div class="text-center mt-4">
+  <a href="https://github.com/your-repo-link" target="_blank" class="btn btn-primary btn-lg">
+    View Full Code
+  </a>
+</div>
+
+            </section>
+
+            <section id="contact" class="section fade-in">
+                <h2>Documentation & Resources</h2>
+                <div class="features-grid">
+                    <div class="feature-card" onclick="openResource('doc-final-year-project/PANCREAS SEGMENTATION IN ABDOMINAL CT SCAN USING U-NET.pptx')">
+                        <div class="feature-icon">📊</div>
+                        <h3>Presentation</h3>
+                        <p>PowerPoint presentation with key findings</p>
+                    </div>
+                    <div class="feature-card" onclick="openResource('model-tgs-pancreas.h5')">
+                        <div class="feature-icon">💾</div>
+                        <h3>Trained Model</h3>
+                        <p>Pre-trained model ready for deployment</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Pancreas Segmentation Project. Built with ❤️ for medical AI research.</p>
+            <div class="social-links">
+                <a href="#" onclick="showGitHub()">GitHub</a>
+                <a href="#" onclick="showLinkedIn()">LinkedIn</a>
+                <a href="#" onclick="showEmail()">Email</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title"></h3>
+            <p id="modal-description"></p>
+            <button class="close-modal" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Fade in animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Image and code opening functions
+        function openImage(filename) {
+            // Replace 'yourusername' and 'your-repo-name' with your actual GitHub username and repository name
+            const baseURL = 'https://raw.githubusercontent.com/yourusername/Pancreas-Segmentation-using-U-NET-Architecture/main/';
+            window.open(baseURL + filename, '_blank');
+        }
+
+        function openCode(filename) {
+            // Replace 'yourusername' and 'your-repo-name' with your actual GitHub username and repository name
+            const baseURL = 'https://github.com/yourusername/Pancreas-Segmentation-using-U-NET-Architecture/blob/main/';
+            window.open(baseURL + filename, '_blank');
+        }
+
+        function openResource(filepath) {
+            // Replace 'yourusername' and 'your-repo-name' with your actual GitHub username and repository name
+            const baseURL = 'https://github.com/yourusername/Pancreas-Segmentation-using-U-NET-Architecture/blob/main/';
+            window.open(baseURL + encodeURIComponent(filepath), '_blank');
+        }
+
+        function viewFullCode() {
+            // Opens the main Python script - you can change this to .ipynb if preferred
+            const baseURL = 'https://github.com/yourusername/Pancreas-Segmentation-using-U-NET-Architecture/blob/main/';
+            window.open(baseURL + 'pancreasSegmentation.py', '_blank');
+        }
+
+        // Social links
+        function showGitHub() {
+            alert('GitHub repository: https://github.com/yourusername/Pancreas-Segmentation-using-U-NET-Architecture');
+        }
+
+        function showLinkedIn() {
+            alert('Connect with me on LinkedIn!');
+        }
+
+        function showEmail() {
+            alert('Contact: your.email@example.com');
+        }
+
+        // Close modal when clicking outside (remove if modal is not used)
+        window.onclick = function(event) {
+            // Modal functionality removed
+        }
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
